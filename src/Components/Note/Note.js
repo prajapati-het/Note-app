@@ -1,29 +1,17 @@
 import React from "react";
-
 import deleteIcon from "../../assets/delete.svg";
-
 import "./Note.css";
 
-let timer = 500,
-  timeout;
+let timer = 500, timeout;
+
 function Note(props) {
   const formatDate = (value) => {
     if (!value) return "";
 
     const date = new Date(value);
     const monthNames = [
-      "Jan",
-      "Feb",
-      "March",
-      "April",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Jan", "Feb", "March", "April", "May", "Jun",
+      "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
 
     let hrs = date.getHours();
@@ -54,14 +42,14 @@ function Note(props) {
       <textarea
         className="note_text"
         defaultValue={props.note.text}
-        onChange={(event) => updateText(event.target.value, props.note.id)}
+        onChange={(event) => updateText(event.target.value, props.note._id)}
       />
       <div className="note_footer">
         <p>{formatDate(props.note.time)}</p>
         <img
           src={deleteIcon}
           alt="DELETE"
-          onClick={() => props.deleteNote(props.note.id)}
+          onClick={() => props.deleteNote(props.note._id)}
         />
       </div>
     </div>

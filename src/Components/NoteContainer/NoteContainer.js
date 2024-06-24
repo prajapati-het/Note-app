@@ -1,11 +1,9 @@
 import React from "react";
-
 import Note from "../Note/Note";
-
 import "./NoteContainer.css";
 
 function NoteContainer(props) {
-  const reverArray = (arr) => {
+  const reverseArray = (arr) => {
     const array = [];
 
     for (let i = arr.length - 1; i >= 0; --i) {
@@ -15,7 +13,7 @@ function NoteContainer(props) {
     return array;
   };
 
-  const notes = reverArray(props.notes);
+  const notes = reverseArray(props.notes);
 
   return (
     <div className="note-container">
@@ -24,7 +22,7 @@ function NoteContainer(props) {
         {notes?.length > 0 ? (
           notes.map((item) => (
             <Note
-              key={item.id}
+              key={item._id} 
               note={item}
               deleteNote={props.deleteNote}
               updateText={props.updateText}
