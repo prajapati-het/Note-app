@@ -15,6 +15,8 @@ function Note({
     const date = new Date(value);
     const monthNames = [
       "Jan", "Feb", "March", "April", "May", "Jun",
+      "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
+      "Jan", "Feb", "March", "April", "May", "Jun",
       "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
 
