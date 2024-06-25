@@ -1,33 +1,25 @@
 import React from "react";
-
 import Note from "../Note/Note";
-
 import "./NoteContainer.css";
 
-function NoteContainer(props) {
-  const reverArray = (arr) => {
-    const array = [];
-
-    for (let i = arr.length - 1; i >= 0; --i) {
-      array.push(arr[i]);
-    }
-
-    return array;
+function NotesContainer({ notes, deleteNote, updateText }) {
+  const reverseArray = (arr) => {
+    return arr.slice().reverse(); // A simpler way to reverse the array
   };
 
-  const notes = reverArray(props.notes);
+  const reversedNotes = reverseArray(notes);
 
   return (
-    <div className="note-container">
+    <div className="notes-container">
       <h2>Notes</h2>
-      <div className="note-container_notes custom-scroll">
-        {notes?.length > 0 ? (
-          notes.map((item) => (
+      <div className="notes-container_notes custom-scroll">
+        {reversedNotes.length > 0 ? (
+          reversedNotes.map((item) => (
             <Note
-              key={item.id}
+              key={item._id}
               note={item}
-              deleteNote={props.deleteNote}
-              updateText={props.updateText}
+              deleteNote={deleteNote}
+              updateText={updateText}
             />
           ))
         ) : (
@@ -38,4 +30,4 @@ function NoteContainer(props) {
   );
 }
 
-export default NoteContainer;
+export default NotesContainer;

@@ -1,29 +1,21 @@
-import React from "react";
-
+import React, { useState } from "react";
 import deleteIcon from "../../assets/delete.svg";
-
 import "./Note.css";
 
-let timer = 500,
-  timeout;
-function Note(props) {
+let timer = 500, timeout;
+
+function Note({
+  note, deleteNote, updateText
+}) {
+  const [text, setText] = useState(note.text); // Local state for the text
+
   const formatDate = (value) => {
     if (!value) return "";
 
     const date = new Date(value);
     const monthNames = [
-      "Jan",
-      "Feb",
-      "March",
-      "April",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Jan", "Feb", "March", "April", "May", "Jun",
+      "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
 
     let hrs = date.getHours();
@@ -45,23 +37,25 @@ function Note(props) {
     timeout = setTimeout(func, timer);
   };
 
-  const updateText = (text, id) => {
-    debounce(() => props.updateText(text, id));
+  const handleChange = (event) => {
+    const newText = event.target.value;
+    setText(newText); // Update local state
+    debounce(() => updateText(newText, note._id));
   };
 
   return (
-    <div className="note" style={{ backgroundColor: props.note.color }}>
+    <div className="note" style={{ backgroundColor: note.color }}>
       <textarea
         className="note_text"
-        defaultValue={props.note.text}
-        onChange={(event) => updateText(event.target.value, props.note.id)}
+        value={text} // Use local state value
+        onChange={handleChange}
       />
       <div className="note_footer">
-        <p>{formatDate(props.note.time)}</p>
+        <p>{formatDate(note.time)}</p>
         <img
           src={deleteIcon}
           alt="DELETE"
-          onClick={() => props.deleteNote(props.note.id)}
+          onClick={() => deleteNote(note._id)}
         />
       </div>
     </div>

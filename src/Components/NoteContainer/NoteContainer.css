@@ -1,15 +1,24 @@
-.note-container {
-  height: 100%;
+.notes-container {
+  padding: 32px;
 }
 
-.note-container h2 {
-  margin-bottom: 20px;
+.notes-container_notes {
+  display: flex;             /* Use flexbox */
+  flex-direction: row;       /* Align items in a row */
+  overflow-x: auto;          /* Enable horizontal scrolling */
+  white-space: nowrap;       /* Prevent wrapping */
+  max-height: 70vh;          /* Optional: limit the height of the container */
 }
 
-.note-container_notes {
-  height: 90%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  overflow-y: scroll;
+.custom-scroll::-webkit-scrollbar {
+  height: 6px;               /* Adjust scrollbar height for horizontal scrolling */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }

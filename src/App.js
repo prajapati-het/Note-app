@@ -1,55 +1,88 @@
 import React, { useEffect, useState } from "react";
-
-import NoteContainer from "./Components/NoteContainer/NoteContainer";
+import NotesContainer from "./Components/NoteContainer/NoteContainer";
 import Sidebar from "./Components/Sidebar/Sidebar";
-
 import "./App.css";
 
 function App() {
-  const [notes, setNotes] = useState(
-    JSON.parse(localStorage.getItem("notes-app")) || []
-  );
+  const [notes, setNotes] = useState([]);
 
-  const addNote = (color) => {
-    const tempNotes = [...notes];
+  // Fetch notes from backend when component mounts
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/notes');
+        const data = await response.json();
+        setNotes(data);
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+      }
+    };
 
-    tempNotes.push({
-      id: Date.now() + "" + Math.floor(Math.random() * 78),
+    fetchNotes();
+  }, []);
+
+  const addNote = async (color) => {
+    const newNote = {
       text: "",
       time: Date.now(),
       color,
-    });
-    setNotes(tempNotes);
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newNote)
+      });
+
+      const data = await response.json();
+      setNotes(prevNotes => [...prevNotes, data]);
+    } catch (error) {
+      console.error("Failed to add note:", error);
+    }
   };
 
-  const deleteNote = (id) => {
-    const tempNotes = [...notes];
+  const deleteNote = async (id) => {
+    try {
+      await fetch(`http://localhost:5000/notes/${id}`, {
+        method: 'DELETE'
+      });
 
-    const index = tempNotes.findIndex((item) => item.id === id);
-    if (index < 0) return;
-
-    tempNotes.splice(index, 1);
-    setNotes(tempNotes);
+      setNotes(prevNotes => prevNotes.filter(note => note._id !== id));
+    } catch (error) {
+      console.error("Failed to delete note:", error);
+    }
   };
 
-  const updateText = (text, id) => {
-    const tempNotes = [...notes];
+  const updateText = async (text, id) => {
+    try {
+      await fetch(`http://localhost:5000/notes/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+      });
 
-    const index = tempNotes.findIndex((item) => item.id === id);
-    if (index < 0) return;
-
-    tempNotes[index].text = text;
-    setNotes(tempNotes);
+      setNotes(prevNotes => {
+        const updatedNotes = [...prevNotes];
+        const index = updatedNotes.findIndex(note => note._id === id);
+        if (index !== -1) {
+          updatedNotes[index].text = text;
+        }
+        return updatedNotes;
+      });
+    } catch (error) {
+      console.error("Failed to update note:", error);
+    }
   };
-
-  useEffect(() => {
-    localStorage.setItem("notes-app", JSON.stringify(notes));
-  }, [notes]);
 
   return (
     <div className="App">
       <Sidebar addNote={addNote} />
-      <NoteContainer
+      <NotesContainer
         notes={notes}
         deleteNote={deleteNote}
         updateText={updateText}
