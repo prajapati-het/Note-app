@@ -32,25 +32,38 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema);
 
 // Routes
-app.get('/notes', async (req, res) => {
+/*app.get('/notes', async (req, res) => {
   try {
     const notes = await Note.find();
     res.json(notes);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+});*/
 
 app.post('/notes', async (req, res) => {
-  const note = new Note({
+  /*const note = new Note({
     text: req.body.text,
     time: req.body.time,
     color: req.body.color
-  });
+  });*/
+
+  const {textdata} = req.body;
 
   try {
-    const newNote = await note.save();
-    res.status(201).json(newNote);
+
+    const notedata = new Note({
+      text: textdata,
+      time: Date.now(),
+      color: "Red"
+    });
+
+    //const newNote = await note.save();
+    //res.status(201).json(newNote);
+
+    await notedata.save()
+    res.status(201).json({ message: `Message Saved: ${notedata}` });
+
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import deleteIcon from "../../assets/delete.svg";
 import "./Note.css";
+import axios from 'axios';
 
 let timer = 500, timeout;
 
 function Note({
   note, deleteNote, updateText
 }) {
-  const [text, setText] = useState(note.text); // Local state for the text
+  const [text, setText] = useState('');
+  const [message, setMessage] = useState(''); // Local state for the text
 
   const formatDate = (value) => {
     if (!value) return "";
@@ -45,6 +47,29 @@ function Note({
     debounce(() => updateText(newText, note._id));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const newText = {
+        text,
+      };
+  
+      //console.log("Before post");
+      const response = await axios.post('http://localhost:5000/notes', newText);
+      //console.log("After post");
+      setMessage(response.data.message);
+  
+      setText('');
+
+
+    } catch (error) {
+      console.error('Error creating user:', error);
+      setMessage('Server error');
+    }
+
+  }
+
   return (
     <div className="note" style={{ backgroundColor: note.color }}>
       <textarea
@@ -60,6 +85,10 @@ function Note({
           onClick={() => deleteNote(note._id)}
         />
       </div>
+      <div>
+        <button type="submit" onClick={handleSubmit}>Save</button>
+      </div>
+      {message && <p>{message}</p>}
     </div>
   );
 }
